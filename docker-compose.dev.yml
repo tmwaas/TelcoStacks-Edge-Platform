@@ -1,0 +1,13 @@
+services:
+  ingest:
+    build: ./apps/ingest
+    environment: [ "TRANSFORM_URL=http://transform:8080/process" ]
+    ports: ["8081:8080"]
+  transform:
+    build: ./apps/transform
+    environment: [ "API_URL=http://api:8080/events" ]
+    ports: ["8082:8080"]
+  api:
+    build: ./apps/api
+    ports: ["8083:8080"]
+version: "3.9"

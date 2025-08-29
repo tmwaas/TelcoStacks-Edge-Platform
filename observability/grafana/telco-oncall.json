@@ -1,0 +1,71 @@
+{
+  "title": "Telco On-Call",
+  "schemaVersion": 36,
+  "version": 1,
+  "panels": [
+    {
+      "type": "stat",
+      "title": "API 5xx rate (1m)",
+      "targets": [
+        {
+          "expr": "sum(rate(http_request_duration_seconds_count{code=~\"5..\"}[1m]))"
+        }
+      ],
+      "id": 1
+    },
+    {
+      "type": "graph",
+      "title": "P95 Latency by route",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le, route))",
+          "legendFormat": "{{route}}"
+        }
+      ],
+      "id": 2
+    },
+    {
+      "type": "graph",
+      "title": "Transform throughput (events/s)",
+      "targets": [
+        {
+          "expr": "rate(transform_processed_total[1m])"
+        }
+      ],
+      "id": 3
+    },
+    {
+      "type": "graph",
+      "title": "Pod restarts",
+      "targets": [
+        {
+          "expr": "sum(increase(kube_pod_container_status_restarts_total[10m])) by (pod)"
+        }
+      ],
+      "id": 4
+    },
+    {
+      "type": "graph",
+      "title": "HPA replicas",
+      "targets": [
+        {
+          "expr": "kube_deployment_status_replicas{namespace=\"telco\"}"
+        }
+      ],
+      "id": 5
+    },
+    {
+      "type": "graph",
+      "title": "CPU/memory (container)",
+      "targets": [
+        {
+          "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"telco\",container!=\"\"}[1m])) by (pod)"
+        },
+        {
+          "expr": "sum(container_memory_working_set_bytes{namespace=\"telco\",container!=\"\"}) by (pod)"
+        }
+      ],
+      "id": 6
+    }
+  ]
+}

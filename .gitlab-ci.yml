@@ -1,0 +1,41 @@
+stages: [lint, test, build, scan, deploy-dev]
+variables: { DOCKER_DRIVER: overlay2, REGISTRY_IMAGE_BASE: $CI_REGISTRY_IMAGE }
+.default_node: { image: node:20-alpine }
+lint:
+  stage: lint
+  extends: .default_node
+  script:
+    - cd apps/api && npm ci && npm run lint || true
+    - cd ../transform && npm ci && npm run lint || true
+    - cd ../ingest && npm ci && npm run lint || true
+test:
+  stage: test
+  extends: .default_node
+  script:
+    - cd apps/api && npm ci && npm test
+    - cd ../transform && npm ci && npm test
+    - cd ../ingest && npm ci && npm test
+build:
+  stage: build
+  image: docker:27
+  services: [ docker:27-dind ]
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $REGISTRY_IMAGE_BASE/ingest:$CI_COMMIT_SHORT_SHA apps/ingest
+    - docker build -t $REGISTRY_IMAGE_BASE/transform:$CI_COMMIT_SHORT_SHA apps/transform
+    - docker build -t $REGISTRY_IMAGE_BASE/api:$CI_COMMIT_SHORT_SHA apps/api
+    - docker push $REGISTRY_IMAGE_BASE/ingest:$CI_COMMIT_SHORT_SHA
+    - docker push $REGISTRY_IMAGE_BASE/transform:$CI_COMMIT_SHORT_SHA
+    - docker push $REGISTRY_IMAGE_BASE/api:$CI_COMMIT_SHORT_SHA
+scan:
+  stage: scan
+  image: aquasec/trivy:latest
+  script:
+    - trivy image --exit-code 0 --severity HIGH,CRITICAL $REGISTRY_IMAGE_BASE/ingest:$CI_COMMIT_SHORT_SHA
+    - trivy image --exit-code 0 --severity HIGH,CRITICAL $REGISTRY_IMAGE_BASE/transform:$CI_COMMIT_SHORT_SHA
+    - trivy image --exit-code 0 --severity HIGH,CRITICAL $REGISTRY_IMAGE_BASE/api:$CI_COMMIT_SHORT_SHA
+deploy-dev:
+  stage: deploy-dev
+  image: bitnami/kubectl:latest
+  script: [ "kubectl apply -k deploy/k8s/overlays/dev" ]
+  environment: { name: dev }

@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: telco
+resources:
+  - namespace.yaml
+  - ingest.yaml
+  - transform.yaml
+  - api.yaml
+  - ingest-hpa.yaml
+  - transform-hpa.yaml
+  - api-hpa.yaml
+  - ingest-pdb.yaml
+  - transform-pdb.yaml
+  - api-pdb.yaml
+  - networkpolicy-default-deny.yaml

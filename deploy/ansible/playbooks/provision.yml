@@ -1,0 +1,11 @@
+- hosts: edge
+  become: yes
+  tasks:
+    - name: Install deps
+      apt: { name: [curl, ca-certificates], state: present, update_cache: yes }
+    - name: Install k3s
+      shell: curl -sfL https://get.k3s.io | sh -s - --disable traefik
+      args: { creates: /usr/local/bin/k3s }
+    - name: Label node
+      shell: "kubectl label node $(hostname) node-role.kubernetes.io/edge=true --overwrite"
+      environment: { KUBECONFIG: /etc/rancher/k3s/k3s.yaml }

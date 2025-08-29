@@ -1,0 +1,54 @@
+alertmanager:
+  alertmanagerSpec:
+    alertmanagerConfigSelector: {}
+  config:
+    global:
+      resolve_timeout: 5m
+      smtp_smarthost: 'smtp.example.com:587'
+      smtp_from: 'alertmanager@example.com'
+      smtp_auth_username: 'user@example.com'
+      smtp_auth_password: 'CHANGE_ME'
+    route:
+      receiver: 'slack-general'
+      group_by: ['alertname','job']
+      group_wait: 30s
+      group_interval: 2m
+      repeat_interval: 2h
+      routes:
+        - receiver: 'slack-critical'
+          matchers: [ 'severity = "critical"' ]
+        - receiver: 'email-ops'
+          matchers: [ 'severity = "critical"' ]
+    receivers:
+      - name: 'slack-general'
+        slack_configs:
+          - send_resolved: true
+            channel: '#oncall'
+            api_url: 'https://hooks.slack.com/services/XXX/YYY/ZZZ'
+            title: '[{{ .Status | toUpper }}] {{ .CommonLabels.alertname }}'
+            text: |
+              *Severity*: {{ .CommonLabels.severity }}
+              *Summary*: {{ .CommonAnnotations.summary }}
+              *Desc*: {{ .CommonAnnotations.description }}
+      - name: 'slack-critical'
+        slack_configs:
+          - send_resolved: true
+            channel: '#oncall-critical'
+            api_url: 'https://hooks.slack.com/services/XXX/YYY/ZZZ'
+            title: '[CRITICAL] {{ .CommonLabels.alertname }}'
+            text: |
+              *Summary*: {{ .CommonAnnotations.summary }}
+              *Desc*: {{ .CommonAnnotations.description }}
+      - name: 'email-ops'
+        email_configs:
+          - to: 'ops@example.com'
+            send_resolved: true
+
+grafana:
+  defaultDashboardsEnabled: true
+  dashboardsConfigMaps:
+    default: telco-dashboards
+
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
