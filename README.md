@@ -17,37 +17,10 @@ This repository contains application services (ingest, transform, api), deployme
 
 🏗️ Architecture
                           
-<img width="2048" height="2048" alt="Gemini_Generated_Image_s0ilus0ilus0ilus" src="https://github.com/user-attachments/assets/5aa36100-18e9-48c1-bc6e-6ebee353d4a7" />
+<img width="2048" height="2048" alt="Gemini_Generated_Image_s0ilus0ilus0ilus" src="https://github.com/user-attachments/assets/5aa36100-18e9-48c1-bc6e-6ebee353d4a7" />      
 
-<img width="316" height="248" alt="image" src="https://github.com/user-attachments/assets/ec262c4e-da6b-4aa6-949a-4190ab10640e" />
 
-                                         
 
-📂 Repository Structure
-telcostacks-edge-gateway/
-├── apps/                          # Application microservices
-│   ├── ingest/                    # Receives/generates events → forward to transform
-│   ├── transform/                 # Normalizes/enriches events → forward to API
-│   └── api/                       # Exposes stats + /metrics
-├── deploy/
-│   ├── k8s/
-│   │   ├── base/                  # Namespace, Deployments, Services, HPA, PDB, NetPol
-│   │   └── overlays/
-│   │       ├── dev/               # Ingress (api.localtest.me), image tags for dev
-│   │       └── edge/              # Node selectors/tolerations for edge nodes
-│   └── ansible/                   # k3s provisioning playbook + inventories
-├── observability/
-│   ├── grafana/                   # Dashboards (JSON) + ConfigMap
-│   └── prometheus/                # Alert rules + ServiceMonitors + Helm values
-├── security/
-│   └── opa/                       # Gatekeeper templates & constraints (policies)
-├── ci/
-│   └── k6/                        # Load test scripts
-├── scripts/
-│   └── dev_bootstrap.sh           # One‑liner: cluster + ingress + app + monitoring + policies
-├── .gitlab-ci.yml                 # GitLab CI pipeline
-├── .github/workflows/ci.yml       # (Optional) GitHub Actions pipeline
-├── README.md                      # Project documentation (this file)
 
 ⚙️ Getting Started
 1) Clone the repository (or unzip the provided archive)
