@@ -1,11 +1,11 @@
-TelcoStacks Edge Platform – Cloud-Native Edge Pipeline 
+TelcoStacks Edge Platform – Cloud-Native Edge Pipeline
 
-Overview
-TelcoStacks Edge Platform is a cloud‑native, Kubernetes‑based *edge pipeline* designed for telco/cloud scenarios. It simulates a data flow (ingest → transform → API) and includes CI/CD, observability, security policies, edge provisioning, and on‑call drills.
+📌 Overview
+TelcoStacks Edge Platform is a cloud‑native, Kubernetes‑based *edge pipeline* designed for telco/cloud scenarios. It simulates a data flow (ingest → transform → API) and includes CI/CD, observability, security policies, and edge provisioning.
 
 This repository contains application services (ingest, transform, api), deployment manifests (Kustomize overlays), observability configs (Prometheus/Grafana/Alertmanager), and security policies (OPA Gatekeeper).
 
-Features
+🚀 Features
 • Ingest Service – Accepts/generates events (simulated CDR/device usage) and forwards to transform.  
 • Transform Service – Normalizes/enriches events and forwards summaries to API.  
 • API Service – Exposes /stats and Prometheus /metrics for dashboards and alerts.  
@@ -15,7 +15,7 @@ Features
 • Security & Compliance – OPA Gatekeeper (no :latest, non‑root, resource limits), image scanning (Trivy).  
 • Edge Provisioning – Ansible playbook to provision a k3s edge node (Ubuntu).
 
-Architecture
+🏗️ Architecture
                           ┌───────────────────────────┐
                           │        Dev & CI/CD        │
                           │  build • scan • deploy    │
@@ -43,7 +43,7 @@ Architecture
                                              ▼
                                          Grafana (Dashboards)
 
-Repository Structure
+📂 Repository Structure
 telcostacks-edge-gateway/
 ├── apps/                          # Application microservices
 │   ├── ingest/                    # Receives/generates events → forward to transform
@@ -69,7 +69,7 @@ telcostacks-edge-gateway/
 ├── .github/workflows/ci.yml       # (Optional) GitHub Actions pipeline
 ├── README.md                      # Project documentation (this file)
 
-Getting Started
+⚙️ Getting Started
 1) Clone the repository (or unzip the provided archive)
 git clone https://github.com/<your-username>/telcostacks-edge-gateway.git
 cd telcostacks-edge-gateway
@@ -102,7 +102,7 @@ kubectl -n monitoring get pods
 kubectl -n monitoring port-forward svc/kps-grafana 3000:80
 open http://localhost:3000
 
-Tech Stack
+🔧 Tech Stack
 Cloud/Orchestration: Kubernetes (k3d/k3s), Helm, Kustomize  
 IaC/Automation: Ansible (k3s provisioning)  
 Containers: Docker  
@@ -112,11 +112,11 @@ Observability: Prometheus, Grafana, Alertmanager, ServiceMonitors
 Security: OPA Gatekeeper (policies), Trivy image scanning  
 Testing: k6 load testing
 
-Security & Compliance
+🛡️ Security & Compliance
 • Containers run as non‑root with resource limits and probes.  
 • OPA Gatekeeper policies enforce “no :latest”, non‑root, and limits/requests.  
 • NetworkPolicies restrict traffic within the namespace.  
 • Image scanning with Trivy in CI.  
 
-Contributing
+🤝 Contributing
 Contributions are welcome! Fork the repo, create a feature branch, and open a Pull Request.  
