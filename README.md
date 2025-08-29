@@ -43,6 +43,10 @@ This repository contains application services (ingest, transform, api), deployme
                                              ▼
                                          Grafana (Dashboards)
 
+
+<img width="2048" height="2048" alt="Gemini_Generated_Image_s0ilus0ilus0ilus" src="https://github.com/user-attachments/assets/5aa36100-18e9-48c1-bc6e-6ebee353d4a7" />
+                                         
+
 📂 Repository Structure
 telcostacks-edge-gateway/
 ├── apps/                          # Application microservices
